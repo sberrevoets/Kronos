@@ -152,10 +152,9 @@ final class NTPClient {
         let callback: CFSocketCallBack = { socket, callbackType, _, data, info in
             print(callbackType)
             if callbackType == .writeCallBack {
-                var packet = NTPPacket()
-                let PDU = packet.prepareToSend() as CFData
-                CFSocketSendData(socket, nil, PDU, kDefaultTimeout)
-                print("sent")
+//                var packet = NTPPacket()
+//                let PDU = packet.prepareToSend() as CFData
+//                CFSocketSendData(socket, nil, PDU, kDefaultTimeout)
                 return
             }
 
@@ -190,7 +189,17 @@ final class NTPClient {
 
         let runLoopSource = CFSocketCreateRunLoopSource(kCFAllocatorDefault, socket, 0)
         CFRunLoopAddSource(CFRunLoopGetMain(), runLoopSource, CFRunLoopMode.commonModes)
+        print(socket)
         CFSocketConnectToAddress(socket, ip.addressData(withPort: port), timeout)
+
+        defer {
+            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(500)) {
+                var packet = NTPPacket()
+                let PDU = packet.prepareToSend() as CFData
+                CFSocketSendData(socket, nil, PDU, kDefaultTimeout)
+            }
+        }
+
         return (runLoopSource!, socket)
     }
 }
