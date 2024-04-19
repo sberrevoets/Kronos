@@ -109,7 +109,7 @@ final class NTPClient {
         )
 
         timer = BlockTimer.scheduledTimer(withTimeInterval: timeout, repeated: true) { _ in
-//            bridgeCallback(nil, TimeInterval.infinity)
+            bridgeCallback(nil, TimeInterval.infinity)
             retainedCallback.release()
 
             if let (source, socket) = sourceAndSocket {
@@ -156,6 +156,8 @@ final class NTPClient {
                 CFSocketSendData(socket, nil, PDU, kDefaultTimeout)
                 return
             }
+
+            print(data)
 
             guard let info = info else {
                 return
