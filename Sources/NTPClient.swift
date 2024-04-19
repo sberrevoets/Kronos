@@ -154,7 +154,8 @@ final class NTPClient {
             if callbackType == .writeCallBack {
                 var packet = NTPPacket()
                 let PDU = packet.prepareToSend() as CFData
-                CFSocketSendData(socket, nil, PDU, kDefaultTimeout)
+                let result = CFSocketSendData(socket, nil, PDU, kDefaultTimeout)
+                print(result.rawValue)
                 print("sent")
                 return
             }
