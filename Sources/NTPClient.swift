@@ -89,13 +89,6 @@ final class NTPClient {
                 }
             }
 
-            if let data {
-                let pdu = try? NTPPacket(data: data, destinationTime: destinationTime)
-                print(pdu?.isValidResponse())
-            } else {
-                print("no data")
-            }
-
             timer?.invalidate()
             guard
                 let data = data, let PDU = try? NTPPacket(data: data, destinationTime: destinationTime),
@@ -116,7 +109,7 @@ final class NTPClient {
         )
 
         timer = BlockTimer.scheduledTimer(withTimeInterval: timeout, repeated: true) { _ in
-            bridgeCallback(nil, TimeInterval.infinity)
+//            bridgeCallback(nil, TimeInterval.infinity)
             retainedCallback.release()
 
             if let (source, socket) = sourceAndSocket {
