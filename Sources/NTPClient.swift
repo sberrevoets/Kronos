@@ -155,6 +155,7 @@ final class NTPClient {
                 var packet = NTPPacket()
                 let PDU = packet.prepareToSend() as CFData
                 CFSocketSendData(socket, nil, PDU, kDefaultTimeout)
+                print("sent")
                 return
             }
 
