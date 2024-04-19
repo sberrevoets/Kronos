@@ -157,8 +157,6 @@ final class NTPClient {
                 return
             }
 
-            print(data)
-
             guard let info = info else {
                 return
             }
@@ -185,6 +183,10 @@ final class NTPClient {
 
         let runLoopSource = CFSocketCreateRunLoopSource(kCFAllocatorDefault, socket, 0)
         CFRunLoopAddSource(CFRunLoopGetMain(), runLoopSource, CFRunLoopMode.commonModes)
+        print(socket)
+        print(ip.addressData(withPort: port))
+        print(timeout)
+
         CFSocketConnectToAddress(socket, ip.addressData(withPort: port), timeout)
         return (runLoopSource!, socket)
     }
