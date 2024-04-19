@@ -150,6 +150,7 @@ final class NTPClient {
         signal(SIGPIPE, SIG_IGN)
 
         let callback: CFSocketCallBack = { socket, callbackType, _, data, info in
+            print(callbackType)
             if callbackType == .writeCallBack {
                 var packet = NTPPacket()
                 let PDU = packet.prepareToSend() as CFData
@@ -183,10 +184,6 @@ final class NTPClient {
 
         let runLoopSource = CFSocketCreateRunLoopSource(kCFAllocatorDefault, socket, 0)
         CFRunLoopAddSource(CFRunLoopGetMain(), runLoopSource, CFRunLoopMode.commonModes)
-        print(socket)
-        print(ip.addressData(withPort: port))
-        print(timeout)
-
         CFSocketConnectToAddress(socket, ip.addressData(withPort: port), timeout)
         return (runLoopSource!, socket)
     }
