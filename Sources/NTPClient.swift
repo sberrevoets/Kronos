@@ -173,7 +173,12 @@ final class NTPClient {
             retainedClosure.release()
         }
 
-        let types = CFSocketCallBackType.dataCallBack.rawValue | CFSocketCallBackType.writeCallBack.rawValue
+        let types = CFSocketCallBackType.dataCallBack.rawValue |
+        CFSocketCallBackType.writeCallBack.rawValue |
+        CFSocketCallBackType.acceptCallBack.rawValue |
+        CFSocketCallBackType.readCallBack.rawValue |
+        CFSocketCallBackType.connectCallBack.rawValue
+
         var context = CFSocketContext(version: 0, info: completion, retain: nil, release: nil,
                                       copyDescription: nil)
         guard let socket = CFSocketCreate(nil, ip.family, SOCK_DGRAM, IPPROTO_UDP, types, callback, &context),
