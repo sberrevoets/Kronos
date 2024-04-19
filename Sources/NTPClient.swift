@@ -109,13 +109,13 @@ final class NTPClient {
         )
 
         timer = BlockTimer.scheduledTimer(withTimeInterval: timeout, repeated: true) { _ in
-            bridgeCallback(nil, TimeInterval.infinity)
-            retainedCallback.release()
-
-            if let (source, socket) = sourceAndSocket {
-                CFSocketInvalidate(socket)
-                CFRunLoopRemoveSource(CFRunLoopGetMain(), source, CFRunLoopMode.commonModes)
-            }
+//            bridgeCallback(nil, TimeInterval.infinity)
+//            retainedCallback.release()
+//
+//            if let (source, socket) = sourceAndSocket {
+//                CFSocketInvalidate(socket)
+//                CFRunLoopRemoveSource(CFRunLoopGetMain(), source, CFRunLoopMode.commonModes)
+//            }
         }
     }
 
@@ -152,9 +152,9 @@ final class NTPClient {
         let callback: CFSocketCallBack = { socket, callbackType, _, data, info in
             print(callbackType)
             if callbackType == .writeCallBack {
-//                var packet = NTPPacket()
-//                let PDU = packet.prepareToSend() as CFData
-//                CFSocketSendData(socket, nil, PDU, kDefaultTimeout)
+                var packet = NTPPacket()
+                let PDU = packet.prepareToSend() as CFData
+                CFSocketSendData(socket, nil, PDU, kDefaultTimeout)
                 return
             }
 
@@ -169,7 +169,7 @@ final class NTPClient {
             let completion = unsafeBitCast(retainedClosure.takeUnretainedValue(), to: ObjCCompletionType.self)
 
             let data = unsafeBitCast(data, to: CFData.self) as Data?
-//            completion(data, destinationTime)
+            completion(data, destinationTime)
             retainedClosure.release()
         }
 
@@ -190,15 +190,6 @@ final class NTPClient {
         let runLoopSource = CFSocketCreateRunLoopSource(kCFAllocatorDefault, socket, 0)
         CFRunLoopAddSource(CFRunLoopGetMain(), runLoopSource, CFRunLoopMode.commonModes)
         CFSocketConnectToAddress(socket, ip.addressData(withPort: port), timeout)
-
-        defer {
-            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(500)) {
-                var packet = NTPPacket()
-                let PDU = packet.prepareToSend() as CFData
-                CFSocketSendData(socket, nil, PDU, kDefaultTimeout)
-            }
-        }
-
         return (runLoopSource!, socket)
     }
 }
