@@ -169,7 +169,7 @@ final class NTPClient {
             let completion = unsafeBitCast(retainedClosure.takeUnretainedValue(), to: ObjCCompletionType.self)
 
             let data = unsafeBitCast(data, to: CFData.self) as Data?
-            completion(data, destinationTime)
+//            completion(data, destinationTime)
             retainedClosure.release()
         }
 
@@ -189,7 +189,6 @@ final class NTPClient {
 
         let runLoopSource = CFSocketCreateRunLoopSource(kCFAllocatorDefault, socket, 0)
         CFRunLoopAddSource(CFRunLoopGetMain(), runLoopSource, CFRunLoopMode.commonModes)
-        print(socket)
         CFSocketConnectToAddress(socket, ip.addressData(withPort: port), timeout)
 
         defer {
