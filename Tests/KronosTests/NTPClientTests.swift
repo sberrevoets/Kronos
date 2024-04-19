@@ -9,7 +9,6 @@ final class NTPClientTests: XCTestCase {
         DNSResolver.resolve(host: "time.apple.com") { addresses in
             XCTAssertGreaterThan(addresses.count, 0)
 
-            print(addresses.first!.host)
             NTPClient().query(ip: addresses.first!, version: 3, numberOfSamples: 1) { PDU in
                 XCTAssertNotNil(PDU)
 
